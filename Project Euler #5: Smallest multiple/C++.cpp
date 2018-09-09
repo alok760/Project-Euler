@@ -1,41 +1,30 @@
+
 #include <bits/stdc++.h>
 using namespace std;
-
-void normalSieve(int n)
+bool isPrime(int n)
 {
-    // prime[i] is going to store true if
-    // if i*2 + 1 is composite.
-    bool prime[n/2];
-    memset(prime, false, sizeof(prime));
-
-    // 2 is the only even prime so we can
-    // ignore that. Loop starts from 3.
-    for (int i=3 ; i*i < n; i+=2)
-    {
-        // If i is prime, mark all its
-        // multiples as composite
-        if (prime[i/2] == false)
-            for (int j=i*i; j<n; j+=i*2)
-                prime[j/2] = true;
-    }
-
-    // writing 2 separately
-
-    int result = 1;
-    if(n>=2)
-      result*=pow(2,int(log(n)/log(2)));
-    cout<<result<<endl;
-    // Printing other primes
-    for (int i=3; i<=n ; i+=2)
-        if (prime[i/2] == false)
-        {
-          int k = log(n)/log(i);
-          result*=pow(i,int(log(n)/log(i)));
-          cout<<"i : "<<i<<" k:"<<k<<" pow:"<<pow(i,k)<<" res: "<<result<<endl;
-        }
+    if (n <= 1)
+        return false;
+    if (n <= 3)
+        return true;
+    if (n % 2 == 0 || n % 3 == 0)
+        return false;
+    for (int i = 5; i * i <= n; i = i + 6)
+        if (n % i == 0 || n % (i + 2) == 0)
+            return false;
+    return true;
 }
 
-// Driver code
+void printPrime(int n)
+{
+    int result = 1;
+    for (int i = 2; i <= n; i++)
+        if (isPrime(i))
+            result*=pow(i,int(log(n)/log(i)));
+    printf("%d\n",result);
+
+}
+
 int main()
 {
   int k,inp;
@@ -43,7 +32,8 @@ int main()
   while(k--)
   {
     cin>>inp;
-    normalSieve(inp);
+    printPrime(inp);
   }
   return 0;
+
 }
