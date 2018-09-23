@@ -1,39 +1,41 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
+const long long MAX_SIZE = 1000001;
+vector<long long >isprime(MAX_SIZE , true);
+vector<long long >prime;
+vector<long long >SPF(MAX_SIZE);
 
-void SieveOfEratosthenes(int n)
+void manipulated_seive(int N)
 {
-    int sum=0;
-    bool prime[n+1];
-    memset(prime, true, sizeof(prime));
-
-    for (int p=2; p*p<=n; p++)
+    isprime[0] = isprime[1] = false ;
+    for (long long int i=2; i<N ; i++)
     {
-        // If prime[p] is not changed, then it is a prime
-        if (prime[p] == true)
+        if (isprime[i])
         {
-            // Update all multiples of p
-            for (int i=p*2; i<=n; i += p)
-                prime[i] = false;
+            prime.push_back(i);
+            SPF[i] = i;
+        }
+        for (long long int j=0;
+             j < (int)prime.size() &&
+             i*prime[j] < N && prime[j] <= SPF[i];
+             j++)
+        {
+            isprime[i*prime[j]]=false;
+            SPF[i*prime[j]] = prime[j] ;
         }
     }
-
-    // Print all prime numbers
-    for (int p=2; p<=n; p++)
-       if (prime[p])
-          sum+=p;
-    cout<<sum<<endl;
 }
 
-// Driver Program to test above function
+
 int main()
 {
-    int t,inp;
-    cin>>t;
-    while(t--)
-    {
-      cin>>inp;
-      SieveOfEratosthenes(inp);
-    }
+    int N = 5 ; // Must be less than MAX_SIZE
+    int sum=0;
+    manipulated_seive(N);
+
+    // pint all prime number less then N
+    for (int i=0; i<prime.size() && prime[i] <= N+1 ; i++)
+        cout << prime[i] << " ";
+
     return 0;
 }
